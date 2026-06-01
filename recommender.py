@@ -1,4 +1,3 @@
-import ast
 import os
 import requests
 import pandas as pd
@@ -9,57 +8,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 load_dotenv()
 API_KEY = os.getenv("TMDB_API_KEY")
 
-movies = pd.read_csv("tmdb_5000_movies.csv")
-credits = pd.read_csv("tmdb_5000_credits.csv")
-
-movies = movies.merge(credits, on="title")
-movies = movies[["movie_id", "title", "overview", "genres", "keywords", "cast", "crew"]]
-movies.dropna(inplace=True)
-
-
-def convert(text):
-    return [item["name"] for item in ast.literal_eval(text)]
-
-
-def get_top_cast(text):
-    return [item["name"] for item in ast.literal_eval(text)[:3]]
-
-
-def get_director(text):
-    for item in ast.literal_eval(text):
-        if item["job"] == "Director":
-            return [item["name"]]
-    return []
-
-
-def remove_space(words):
-    return [word.replace(" ", "") for word in words]
-
-
-movies["genres"] = movies["genres"].apply(convert)
-movies["keywords"] = movies["keywords"].apply(convert)
-movies["cast"] = movies["cast"].apply(get_top_cast)
-movies["crew"] = movies["crew"].apply(get_director)
-movies["overview"] = movies["overview"].apply(lambda x: x.split())
-
-movies["genres"] = movies["genres"].apply(remove_space)
-movies["keywords"] = movies["keywords"].apply(remove_space)
-movies["cast"] = movies["cast"].apply(remove_space)
-movies["crew"] = movies["crew"].apply(remove_space)
-
-movies["tags"] = (
-    movies["overview"]
-    + movies["genres"]
-    + movies["keywords"]
-    + movies["cast"]
-    + movies["crew"]
-)
-
-new_movies = movies[["movie_id", "title", "tags"]].copy()
-new_movies["tags"] = new_movies["tags"].apply(lambda x: " ".join(x).lower())
+movies = pd.read_csv("processed_movies.csv")
 
 cv = CountVectorizer(max_features=5000, stop_words="english")
-vectors = cv.fit_transform(new_movies["tags"]).toarray()
+vectors = cv.fit_transform(movies["tags"]).toarray()
 similarity = cosine_similarity(vectors)
 
 
@@ -87,7 +39,7 @@ def fetch_movie_details(movie_id):
 
 
 def recommend(movie, total_results=20):
-    movie_index = new_movies[new_movies["title"] == movie].index[0]
+    movie_index = movies[movies["title"] == movie].index[0]
     distances = similarity[movie_index]
 
     movie_list = sorted(
@@ -99,11 +51,11 @@ def recommend(movie, total_results=20):
     recommendations = []
 
     for i in movie_list:
-        movie_id = int(new_movies.iloc[i[0]].movie_id)
+        movie_id = int(movies.iloc[i[0]].movie_id)
         details = fetch_movie_details(movie_id)
 
         recommendations.append({
-            "title": new_movies.iloc[i[0]].title,
+            "title": movies.iloc[i[0]].title,
             "poster": details["poster"],
             "rating": details["rating"],
             "release_date": details["release_date"],
@@ -115,4 +67,4 @@ def recommend(movie, total_results=20):
 
 
 def get_movie_titles():
-    return new_movies["title"].values
+    return movies["title"].values
