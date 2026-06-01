@@ -61,7 +61,7 @@ Place these files inside the project folder:
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/cinematch.git
+git clone https://github.com/samaa-faisal/cinematch.git
 ```
 
 Go to the project folder:
