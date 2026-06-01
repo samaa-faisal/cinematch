@@ -147,9 +147,9 @@ if st.session_state.recommendations:
 
         for col_index, movie in enumerate(visible_movies[row:row + 5]):
             with cols[col_index]:
-                st.markdown("<div class='movie-card'>", unsafe_allow_html=True)
-
                 st.image(movie["poster"], use_container_width=True)
+                
+                st.markdown("<div class='movie-card'>", unsafe_allow_html=True)
 
                 st.markdown(
                     f"""
