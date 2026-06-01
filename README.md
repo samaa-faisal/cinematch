@@ -96,7 +96,14 @@ Do not upload your `.env` file to GitHub.
 
 ## 📸 Screenshots
 
-Add screenshots here after uploading the project.
+### Home Page
+![Home Page](screenshots/home.png)
+
+### Recommendations
+![Recommendations](screenshots/recommendations.png)
+
+### More Recommendations
+![More Recommendations](screenshots/more-recommendations.png)
 
 ## 🌱 Future Improvements
 
