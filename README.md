@@ -75,7 +75,7 @@ pip install -r requirements.txt
 Create a `.env` file:
 
 ```env
-TMDB_API_KEY=your_api_key_here
+TMDB_API_KEY="2a8febc0480e47be990805acebb25cba"
 ```
 
 Run the app:
