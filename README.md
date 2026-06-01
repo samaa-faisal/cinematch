@@ -13,6 +13,10 @@ CineMatch is a movie recommendation web app that helps users discover similar mo
 * Show more recommendations
 * Modern cinematic UI
 
+## 🌐 Live Demo
+
+https://cinematch-nj8q9wtbyobp7uyzux5xtc.streamlit.app/
+
 ## 🧠 How It Works
 
 CineMatch uses content-based filtering.
